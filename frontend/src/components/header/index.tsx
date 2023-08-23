@@ -1,34 +1,102 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu } from '@headlessui/react';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { AccountCircle } from '@material-ui/icons';
-import { useUserContext } from 'context';
+import {
+  AccountCircleOutlined,
+  ExitToApp,
+  Menu as MenuClosedIcon,
+  MenuOpen as MenuOpenIcon,
+  PersonAddOutlined,
+} from '@material-ui/icons';
+import { selectUserState } from 'config/reducers/user';
+import { useAppDispatch, useAppSelector } from 'hooks';
+import { useState } from 'react';
 
 export default function Header() {
-  const { isAuthorized, logout } = useUserContext();
+  const [openMenu, setOpenMenu] = useState<boolean>(false);
+  const { isAuthorized } = useAppSelector(selectUserState);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  const title = location.pathname === '/auth' ? 'logging...' : isAuthorized ? 'logout' : 'sign up';
+  const close = () => setOpenMenu(false);
 
   return (
-    <header className="absolute w-full h-16 px-2 flex items-center justify-between bg-slate-900 z-[999]">
-      <div
-        className="bg-slate-800 p-2 rounded-lg text-zinc-300 flex 
-        justify-center flex-col items-center backdrop-blur-3xl
-        hover:text-zinc-400 cursor-pointer w-30"
-        onClick={() => navigate('/')}>
-        <span className="leading-5 text-2xl">TODO</span>
-        <span className="leading-4 text-xs">application</span>
-      </div>
+    <header className='absolute z-[999] flex h-16 w-full justify-center bg-slate-900'>
+      <div className='flex w-full max-w-[1440px] items-center justify-between pl-2 pr-4'>
+        <div
+          className='w-30 flex cursor-pointer flex-col items-center 
+        justify-center rounded-lg bg-slate-800 p-2
+        text-zinc-300 backdrop-blur-3xl hover:text-zinc-400'
+          onClick={() => navigate('/')}>
+          <span className='text-2xl leading-5'>TODO</span>
+          <span className='text-xs leading-4'>application</span>
+        </div>
 
-      <div className="flex gap-x-2 h-16 items-center bg-blue-gray-600">
-        <Link
-          onClick={logout}
-          to={isAuthorized ? '/' : '/auth'}
-          className="h-16 relative flex items-center justify-center gap-x-1 hover:text-zinc-400">
-          <span className="capitalize text-zinc-300">{title}</span>
-          <AccountCircle className="w-9 h-9 text-zinc-300 relative" />
-        </Link>
+        <div className='bg-blue-gray-600 flex h-16 items-center gap-x-2'>
+          <Menu
+            as='div'
+            className='relative inline-block'>
+            <Menu.Button
+              as='button'
+              onClick={() => setOpenMenu(!openMenu)}
+              className='btn relative'>
+              {openMenu ? (
+                <MenuOpenIcon className='!h-7 !w-7 text-zinc-300' />
+              ) : (
+                <MenuClosedIcon className='!h-7 !w-7 text-zinc-300' />
+              )}{' '}
+            </Menu.Button>
+            <Menu.Items className='absolute right-0 flex w-40 flex-col gap-y-2 rounded-md bg-zinc-300 px-3 py-3 text-left text-sm'>
+              <>
+                {/* profile button */}
+                {isAuthorized && (
+                  <Menu.Item>
+                    {() => (
+                      <Link
+                        onClick={close}
+                        to='/user'
+                        className='a-default group flex w-full items-center gap-x-2'>
+                        <AccountCircleOutlined className='!h-6 !w-6 !p-0 text-slate-800 group-hover:!text-zinc-400' />
+                        <span className='capitalize text-slate-800 group-hover:!text-zinc-400'>profile</span>
+                      </Link>
+                    )}
+                  </Menu.Item>
+                )}
+                {/* sign up button */}
+                {!isAuthorized && (
+                  <Menu.Item>
+                    {() => (
+                      <Link
+                        onClick={close}
+                        to='/auth'
+                        className='a-default group flex w-full items-center gap-x-2'>
+                        <PersonAddOutlined className='!h-6 !w-6 !p-0 text-slate-800 group-hover:!text-zinc-400' />
+                        <span className='capitalize text-slate-800 group-hover:!text-zinc-400'>sign up</span>
+                      </Link>
+                    )}
+                  </Menu.Item>
+                )}
+                {/* sign out button */}
+                {isAuthorized && (
+                  <Menu.Item>
+                    {() => (
+                      <Link
+                        onClick={() => {
+                          close();
+                          dispatch({ type: 'user/signOut' });
+                        }}
+                        to='/'
+                        className='a-default group flex w-full items-center gap-x-2'>
+                        <ExitToApp className='!h-6 !w-6 !p-0 text-slate-800 group-hover:!text-zinc-400' />
+                        <span className='capitalize text-slate-800 group-hover:!text-zinc-400'>sign out</span>
+                      </Link>
+                    )}
+                  </Menu.Item>
+                )}
+              </>
+            </Menu.Items>
+          </Menu>
+        </div>
       </div>
     </header>
   );

@@ -1,19 +1,16 @@
-import { FC, InputHTMLAttributes, forwardRef } from 'react';
+import { InputHTMLAttributes, forwardRef } from 'react';
 import { twMerge } from 'tailwind-merge';
 interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-export const TextField = forwardRef<HTMLInputElement, TextFieldProps>((props, ref) => {
+export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(({ className, ...props }, ref) => {
   const organizeName = (name: string): string => {
-    return name
-      .split('')
-      .map((l) => (l === l.toUpperCase() ? ' ' + l.toLowerCase() : l))
-      .join('');
+    return name.replace(/\B[A-Z]/g, (match) => ' ' + match.toLowerCase());
   };
   const name = props.name ? organizeName(props.name) : undefined;
   return (
-    <div className='flex flex-col'>
+    <div className={twMerge(className, 'flex flex-col')}>
       {name && (
         <p className={twMerge('reset-text-margin first-letter:capitalize', 'ml-2 py-2 text-zinc-300 lg:text-xl')}>
           {name}

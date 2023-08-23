@@ -1,4 +1,4 @@
-import router from 'routes';
+import router from 'config/routes';
 
 import 'normalize.css';
 

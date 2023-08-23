@@ -16,8 +16,13 @@
     @apply w-full h-full flex flex-col;
   }
   
+  /* custom classNames */
   .btn {
-    @apply bg-zinc-300 text-slate-800;
+    @apply cursor-pointer border-none bg-inherit outline-none;
+  }
+  .a-default, .a-default:link, .a-default:visited {
+      text-decoration: inherit;
+      color: inherit;
   }
 
   .reset-text-margin {

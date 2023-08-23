@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { TextField } from 'common/form-fields';
+import { TextField } from 'common/ui';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';

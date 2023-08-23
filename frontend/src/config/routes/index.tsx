@@ -1,12 +1,12 @@
 import { lazy } from 'react';
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 import Layout from './layout';
+import profileRouter from './profile.route';
 
 /**
  * wrap pages to lazy
  */
 const Authorization = lazy(() => import('pages/auth'));
-const Profile = lazy(() => import('pages/profile'));
 
 /**
  * app routing
@@ -21,12 +21,8 @@ const router = createBrowserRouter([
         path: '/auth',
         element: <Authorization />,
       },
-
-      //profile page
-      {
-        path: '/user',
-        element: <Profile />,
-      },
+      // profile router
+      profileRouter,
     ],
   },
   {

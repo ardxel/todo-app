@@ -1,7 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { TextField } from 'common/ui';
+import { signIn, signUp } from 'config/reducers/user';
+import { useAppDispatch } from 'hooks';
+import { useAuth } from 'hooks/useAuth';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { twMerge } from 'tailwind-merge';
 import { loginShema, registrationSchema } from './validation';
 
@@ -10,15 +14,26 @@ const RegistrationForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm({ resolver: yupResolver(registrationSchema) });
-  // console.log(errors);
-  const onSubmit = (values: { username: string; email: string; password: string; confirmPassword: string }) => {
-    console.log(values);
-    reset();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const { call, error, isLoading } = useAuth('sign-up');
+
+  const onSubmit = async (values: { username: string; email: string; password: string; confirmPassword: string }) => {
+    const body = {
+      email: values.email,
+      username: values.username,
+      password: values.password,
+    };
+    const user = await call(body);
+    if (user) {
+      dispatch(signUp(user));
+      navigate('/user');
+    }
   };
   return (
-    <div className='xs1:w-[50vw] mx-auto w-2/3 max-w-[400px]'>
+    <div className='mx-auto w-2/3 max-w-[400px] xs1:w-[50vw]'>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className='flex flex-col justify-center gap-y-8'>
@@ -42,6 +57,7 @@ const RegistrationForm = () => {
           error={errors['confirmPassword']?.message}
           type='password'
         />
+        {error ? <span className='text-center font-bold text-red-400'>{error}</span> : null}
         <button
           className={twMerge(
             'font-bol mx-auto w-32 rounded-xl border-0 px-1 py-2 font-bold text-slate-800',
@@ -63,14 +79,19 @@ const LoginForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm({ resolver: yupResolver(loginShema) });
-  const onSubmit = (values: { emailOrUsername: string; password: string }) => {
-    console.log(values);
-    reset();
+  const { call, error, isLoading } = useAuth('sign-in');
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const onSubmit = async (values: { emailOrUsername: string; password: string }) => {
+    const user = await call(values);
+    if (user) {
+      dispatch(signIn(user));
+      navigate('/user');
+    }
   };
   return (
-    <div className='xs1:w-[50vw] mx-auto w-2/3 max-w-[400px]'>
+    <div className='mx-auto w-2/3 max-w-[400px] xs1:w-[50vw]'>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className='flex flex-col justify-center gap-y-8'>
@@ -84,6 +105,7 @@ const LoginForm = () => {
           error={errors.password?.message}
           type='password'
         />
+        {error ? <span className='text-center font-bold text-red-400'>{error}</span> : null}
         <button
           className={twMerge(
             'font-bol mx-auto w-32 rounded-xl border-0 px-1 py-2 font-bold text-slate-800',
@@ -109,9 +131,9 @@ const Authorization = () => {
   return (
     <main
       className={twMerge(
-        'xs1:px-2 mx-auto mt-32 rounded-3xl bg-slate-900 px-0 py-10',
+        'mx-auto mt-32 rounded-3xl bg-slate-900 px-0 py-10 xs1:px-2',
         'flex flex-col justify-center',
-        'xs2:w-10/12 xs1:w-9/12 w-full  sm:w-8/12 lg:w-2/3',
+        'w-full xs2:w-10/12 xs1:w-9/12  sm:w-8/12 lg:w-2/3',
         'max-w-[720px]',
       )}>
       <h1 className='mx-auto mb-10 text-center text-4xl capitalize text-zinc-300'>

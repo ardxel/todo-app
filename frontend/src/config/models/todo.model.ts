@@ -1,6 +1,9 @@
 export interface ITodo {
-  _id: number;
   value: string;
+  _id: string;
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CreateTodo extends Pick<ITodo, 'value'> {}
+export interface UpdateTodo extends Pick<ITodo, 'value' | '_id'> {}

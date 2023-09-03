@@ -1,17 +1,10 @@
-import { createSelector } from '@reduxjs/toolkit';
 import { TextField } from 'common/ui';
-import { ITodo } from 'config/models';
-import { createTodo } from 'config/reducers/user';
-import { useAppDispatch, useAppSelector } from 'hooks';
+import { CreateTodo, ITodo } from 'config/models';
+import { useAppDispatch } from 'hooks';
 import { ChangeEvent, useState } from 'react';
-
-const selectUserTodoLength = createSelector(
-  (state: RootState) => state.user.user,
-  (user) => user.todos.length,
-);
+import { fetchNewTodo } from './fetchChanges';
 
 const CreateUserTODO = () => {
-  const todosLength = useAppSelector(selectUserTodoLength);
   const dispatch = useAppDispatch();
 
   const [value, setValue] = useState('');
@@ -23,19 +16,17 @@ const CreateUserTODO = () => {
     }
     setValue(event.target.value);
   };
+
   const onSubmit = () => {
     if (value.length === 0) {
       return setInvalid(true);
     }
 
-    const todo: ITodo = {
+    const todo: CreateTodo = {
       value: value,
-      _id: todosLength,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
-    dispatch(createTodo(todo));
+    dispatch(fetchNewTodo(todo));
   };
 
   return (

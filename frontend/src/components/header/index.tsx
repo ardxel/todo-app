@@ -8,13 +8,13 @@ import {
   MenuOpen as MenuOpenIcon,
   PersonAddOutlined,
 } from '@material-ui/icons';
-import { selectUserState } from 'config/reducers/user';
+import { selectIsAuthorized, selectUserState } from 'config/reducers/user';
 import { useAppDispatch, useAppSelector } from 'hooks';
 import { useState } from 'react';
 
 export default function Header() {
   const [openMenu, setOpenMenu] = useState<boolean>(false);
-  const { isAuthorized } = useAppSelector(selectUserState);
+  const isAuthorized = useAppSelector(selectIsAuthorized);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 

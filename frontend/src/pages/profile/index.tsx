@@ -6,7 +6,6 @@ import { twMerge } from 'tailwind-merge';
 
 const Profile = () => {
   const todos = useAppSelector(selectTodos);
-
   return (
     <main className={twMerge('mx-auto mt-14 w-2/3 rounded-md bg-slate-900 p-2 text-zinc-200')}>
       <ul className='mx-auto flex w-3/4 list-none flex-col gap-y-4 pl-0'>
@@ -18,14 +17,15 @@ const Profile = () => {
             <p className='reset-text-margin'>create todo</p>
           </Link>
         </div>
-        {todos.map((todo, index) => {
-          return (
-            <TODO
-              key={index}
-              {...todo}
-            />
-          );
-        })}
+        {todos.length > 0 &&
+          todos.map((todo, index) => {
+            return (
+              <TODO
+                key={index}
+                {...todo}
+              />
+            );
+          })}
       </ul>
     </main>
   );

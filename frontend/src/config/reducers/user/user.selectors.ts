@@ -6,6 +6,11 @@ export const selectUserState = createSelector(
   (user) => user,
 );
 
+export const selectIsAuthorized = createSelector(
+  (state: RootState) => state.user,
+  (user) => user.isAuthorized,
+);
+
 // select user state todos
 export const selectTodos = createSelector(
   (state: RootState) => state.user,

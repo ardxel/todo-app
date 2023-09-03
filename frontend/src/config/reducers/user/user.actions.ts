@@ -1,7 +1,15 @@
 import { createAction } from '@reduxjs/toolkit';
-import { ITodo, IUser } from 'config/models';
+import { CreateTodo, ITodo, IUser } from 'config/models';
 
 export const signOut = createAction('user/signOut');
+
+export const signUp = createAction('user/signUp', (user: IUser) => {
+  return {
+    payload: {
+      user,
+    },
+  };
+});
 
 export const signIn = createAction('user/signIn', (user: IUser) => {
   return {
@@ -11,26 +19,26 @@ export const signIn = createAction('user/signIn', (user: IUser) => {
   };
 });
 
-export const createTodo = createAction('user/createTodo', (todo: ITodo) => {
+export const createTodo = createAction('user/createTodo', (todos: ITodo[]) => {
   return {
     payload: {
-      todo,
+      todos,
     },
   };
 });
 
-export const deleteTodo = createAction('user/deleteTodoById', (todo: ITodo) => {
+export const deleteTodo = createAction('user/deleteTodoById', (todos: ITodo[]) => {
   return {
     payload: {
-      todo,
+      todos,
     },
   };
 });
 
-export const updateTodo = createAction('user/updateTodo', (todo: ITodo) => {
+export const updateTodo = createAction('user/updateTodo', (todos: ITodo[]) => {
   return {
     payload: {
-      todo,
+      todos,
     },
   };
 });

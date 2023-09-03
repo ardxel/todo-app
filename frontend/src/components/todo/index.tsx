@@ -2,9 +2,9 @@ import { DeleteForeverOutlined, DoneOutline, EditOutlined } from '@material-ui/i
 import { ITodo } from 'config/models';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-interface TODOProps extends ITodo {}
+interface TodoComponentProps extends ITodo {}
 
-const TODO: FC<TODOProps> = (props) => {
+const TODO: FC<TodoComponentProps> = (props) => {
   return (
     <div className='min-h-10 relative flex items-center justify-between rounded-lg bg-slate-300 p-2'>
       <p className='reset-text-margin absolute left-0 top-0 ml-2 mt-1 text-[0.6rem] leading-none text-slate-400'>
@@ -15,9 +15,7 @@ const TODO: FC<TODOProps> = (props) => {
         last modify: {props.updatedAt.toLocaleDateString()}
       </p>
       <div className='mr-1 flex gap-x-2'>
-        <button
-          // to={`todo/${props.id}/delete`}
-          className='btn group relative rounded-xl bg-slate-50 p-1'>
+        <button className='btn group relative rounded-xl bg-slate-50 p-1'>
           <DoneOutline className='translate-y-[2px] !p-0 leading-none text-green-500 !transition-transform group-hover:scale-110 ' />
         </button>
         <Link
